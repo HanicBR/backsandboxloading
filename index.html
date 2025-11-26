@@ -18,7 +18,7 @@
 
       /* CARDS MAIS TRANSPARENTES */
       --glass: rgba(255,255,255,0.50);
-      --glass-strong: rgba(255,255,255,0.58);
+      --glass-strong: rgba(255,255,255,0.60);
       --glass-border: rgba(0,0,0,0.05);
 
       --text: #0b1220;
@@ -114,7 +114,7 @@
       height: 100%;
       max-width: 1500px;
       margin: 0 auto;
-      margin-top: 5%;
+      margin-top: 4%;
       display: grid;
       grid-template-rows: auto 1fr auto;
       gap: inherit;
@@ -213,14 +213,14 @@
     .dot-blue{ background:#3b82f6; }
 
     /* =========================================================
-       VIP CLUB CARD
+       CARD DE ERRO AO ENTRAR (antes: VIP CLUB)
        ========================================================= */
     .vip-club-card{
       justify-content:center;
       text-align:center;
       background:
         radial-gradient(circle at top, var(--red-soft), transparent 65%),
-        var(--glass);
+        var(--glass-strong); /* menos transparente */
     }
     .vip-club-title{
       font-weight:900;
@@ -622,8 +622,9 @@
         <!-- SANDBOX (era TTT) -->
         <div class="glass-card card-ttt">
           <div class="ttt-header">
+	    <span>BACKSTABBER</span>
             <span class="ttt-badge">SANDBOX</span>
-            <span>Garry's Mod Sandbox</span>
+            
           </div>
           <div class="ttt-subtitle">Crie, experimente e zoe com a galera</div>
 
@@ -647,12 +648,11 @@
           </div>
         </div>
 
-        <!-- "Clube VIP" agora com instruções de erro -->
+        <!-- CARD DE ERRO AO ENTRAR -->
         <div class="glass-card vip-club-card card-vipclub">
-          <div class="vip-club-title">Clube VIP</div>
+          <div class="vip-club-title">Erro ao entrar no servidor?</div>
           <div class="card-scroll vip-club-text">
-            Erro ao entrar no servidor?<br><br>
-            <b>Passo 1:</b> Reinicie seu jogo e tente entrar novamente.<br>
+            <b>Passo 1:</b> Reinicie seu jogo e tente entrar novamente.<br><br>
             <b>Passo 2:</b> Se o passo 1 não funcionar, vá em
             <b>GarrysMod/garrysmod/cache/</b> e delete a pasta <b>lua</b>, depois reinicie o jogo.
           </div>
@@ -738,9 +738,24 @@
   var VIPS = [
     {
       steamId: "",
-      name: "✪ Sushi",
-      avatar: "https://i.imgur.com/qrtE4cN.gif"
-    }
+      name: "Gabe",
+      avatar: "https://avatars.steamstatic.com/c94633f1303787c7164b7833b0d964e87dc1217d_full.jpg"
+    },
+{
+      steamId: "",
+      name: "luis29dan",
+      avatar: "https://avatars.steamstatic.com/12ea6ecd7e0b241345564ba2e6e1fb61160669e2_full.jpg"
+    },
+{
+      steamId: "",
+      name: "Sheva",
+      avatar: "https://avatars.steamstatic.com/0650a97d7708b948a87e28c4b7c07ca9f268b073_full.jpg"
+    },
+{
+      steamId: "",
+      name: "₊✩‧₊˚౨ ST4R ৎ˚₊",
+      avatar: "https://avatars.steamstatic.com/d6819b610b1143095fd1f413c6dd0f2fd663a622_full.jpg"
+    },
   ];
 
   /* =========================================================
