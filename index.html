@@ -121,24 +121,36 @@
       min-height: 0;
     }
 
-    /* TOP GRID COM VIP CENTRAL EMBAIXO DO CLUBE VIP */
+    /* TOP GRID: 3 cards em cima, VIP embaixo crescendo por colunas */
     .top-grid {
       display:grid;
       grid-template-columns: 1.25fr 1fr 1fr;
-      grid-template-areas:
-        "ttt vipclub rules"
-        ".   vips    .";
+      grid-auto-rows: auto;
       gap: clamp(10px, 1.4vw, 18px);
       align-items: stretch;
     }
 
-    .card-ttt { grid-area: ttt; }
-    .card-vipclub { grid-area: vipclub; }
-    .card-rules { grid-area: rules; }
+    /* primeira linha */
+    .card-ttt {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .card-vipclub {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .card-rules {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    /* VIP na segunda linha – largura controlada via JS (grid-column) */
     .card-vips {
-      grid-area: vips;
-      justify-self: center;
-      width: min(520px, 100%);
+      grid-row: 2;
+      grid-column: 2 / span 1; /* padrão: só coluna do meio (até 4 VIPs) */
+      justify-self: stretch;
+      width: 100%;
+      max-width: 100%;
     }
 
     .glass-card{
@@ -174,7 +186,7 @@
     }
 
     /* =========================================================
-       "TTT" CARD (agora sandbox, só mantive as classes)
+       "TTT" CARD (aqui SANDBOX)
        ========================================================= */
     .ttt-header {
       display:flex; align-items:center; gap:10px;
@@ -220,7 +232,7 @@
       text-align:center;
       background:
         radial-gradient(circle at top, var(--red-soft), transparent 65%),
-        var(--glass-strong); /* menos transparente */
+        var(--glass-strong);
     }
     .vip-club-title{
       font-weight:900;
@@ -271,10 +283,16 @@
       text-transform:uppercase;
       color:#111827;
     }
+
+    /* VIPs em colunas com no máximo 4 por coluna */
     .vip-list{
-      display:flex; flex-direction:column; gap:8px;
-      overflow:auto;
+      display:grid;
+      grid-template-rows: repeat(4, auto); /* até 4 VIPs por coluna */
+      grid-auto-flow: column;              /* preenche coluna primeiro, depois abre outra */
+      row-gap: 8px;
+      column-gap: 8px;
       padding-right: 4px;
+      overflow:auto;
     }
 
     .vip-card{
@@ -452,74 +470,130 @@
 
     /* =========================================================
        RESPONSIVIDADE POR LARGURA
+       (mantendo o grid geral)
        ========================================================= */
 
-    /* >>> 1280px (ex: 1280x720 / 1280x800) -> 2 colunas compactas */
+    /* 1280px: compacta um pouco */
     @media (max-width: 1280px){
       .container{
         max-width: 1200px;
         margin-top: 3%;
       }
-      .top-grid{
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          "ttt ttt"
-          "vipclub rules"
-          "vips vips";
-        gap: clamp(8px, 1.2vw, 14px);
+
+      .wrap{
+        padding: 10px var(--pad-x);
       }
-      .card-vips{ width: min(600px, 100%); }
+
+      .glass-card,
+      .vip-box,
+      .loading-bar{
+        border-radius: 22px;
+        padding: 10px 14px;
+      }
+
+      .rules-list{
+        font-size: var(--fs-md);
+      }
     }
 
-    /* >>> 1024px (ex: 1024x768) -> 2 colunas mais enxutas */
+    /* 1024px: fontes menores e alturas reduzidas */
     @media (max-width: 1024px){
-      .container{ margin-top: 2%; }
+      :root{
+        --fs-xs: 10px;
+        --fs-sm: 11px;
+        --fs-md: 12px;
+        --fs-lg: 13px;
+        --fs-xl: 18px;
+        --fs-2xl: 22px;
+      }
+
+      .container{
+        max-width: 1150px;
+        margin-top: 2%;
+      }
+
       .glass-card{
-        min-height: clamp(130px, 22vh, 200px);
-        padding: clamp(10px, 1.2vw, 14px);
+        min-height: 130px;
       }
+
       .vip-box{
-        min-height: clamp(150px, 24vh, 220px);
-        padding: clamp(9px, 1vw, 12px);
+        min-height: 140px;
       }
-      .rules-list{ font-size: var(--fs-md); }
-      .loading-bar{ padding: 10px 12px; }
+
+      .server-name{
+        letter-spacing: 0.14em;
+      }
     }
 
-    /* >>> 820px (tablet/cef pequeno) -> 1 coluna */
+    /* 820px: ainda mesmo grid, tudo mais miudinho */
     @media (max-width: 820px){
-      .container{ margin-top: 0; }
-      .top-grid{
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "ttt"
-          "vipclub"
-          "vips"
-          "rules";
+      .container{
+        max-width: 1100px;
+        margin-top: 0;
       }
-      .card-vips{ width: 100%; }
-      .glass-card{ min-height: clamp(120px, 26vh, 190px); }
+
+      .wrap{
+        padding: 8px 10px;
+        gap: 8px;
+      }
+
+      .glass-card,
+      .vip-box{
+        padding: 8px 10px;
+        gap: 6px;
+      }
+
+      .rules-list{
+        gap: 4px;
+      }
+
+      .vip-avatar{
+        width: 32px;
+        height: 32px;
+      }
     }
 
-    /* >>> 640px (bem pequeno) -> tudo compacto */
+    /* 640px: versão bem compacta */
     @media (max-width: 640px){
       :root{
-        --fs-lg: clamp(14px, 2.2vw, 16px);
-        --fs-xl: clamp(16px, 3vw, 20px);
-        --fs-2xl: clamp(18px, 4vw, 24px);
+        --fs-xs: 9px;
+        --fs-sm: 10px;
+        --fs-md: 11px;
+        --fs-lg: 12px;
+        --fs-xl: 16px;
+        --fs-2xl: 18px;
       }
-      .wrap{ padding: 8px; gap: 8px; }
-      .glass-card, .vip-box{
-        padding: 8px 10px;
-        border-radius: 20px;
+
+      .container{
+        max-width: 900px;
       }
-      .loading-bottom{ gap: 6px; }
-      .file{ max-width: 85vw; }
+
+      .wrap{
+        padding: 6px 8px;
+        gap: 6px;
+      }
+
+      .glass-card,
+      .vip-box{
+        padding: 8px 9px;
+        border-radius: 18px;
+      }
+
+      .loading-bottom{
+        gap: 4px;
+      }
+
+      .file{
+        max-width: 85vw;
+      }
+
+      .ttt-subtitle{
+        font-size: var(--fs-xs);
+      }
     }
 
     /* =========================================================
        RESPONSIVIDADE POR ALTURA
-       (resolve 800x600, 1024x600, 1280x600, etc.)
        ========================================================= */
 
     /* >>> <=800px de altura -> libera scroll e reduz espaços */
@@ -579,21 +653,14 @@
       .rule-num{ min-width: 30px; min-height: 30px; font-size: clamp(14px, 3vw, 18px); }
     }
 
-    /* >>> <=520px de altura (stress) -> 1 coluna obrigatória e texto mínimo */
+    /* >>> <=520px de altura (stress) */
     @media (max-height: 520px){
-      .top-grid{
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "ttt"
-          "vipclub"
-          "rules"
-          "vips";
-      }
       .card-vips{ width: 100%; }
 
       .glass-card, .vip-box{
         min-height: auto;
         gap: 6px;
+        padding: 8px 10px;
       }
 
       .ttt-subtitle{ display:none; }
@@ -619,12 +686,11 @@
       <!-- TOP GRID -->
       <div class="top-grid">
 
-        <!-- SANDBOX (era TTT) -->
+        <!-- SANDBOX -->
         <div class="glass-card card-ttt">
           <div class="ttt-header">
-	    <span>BACKSTABBER</span>
+            <span>BACKSTABBER</span>
             <span class="ttt-badge">SANDBOX</span>
-            
           </div>
           <div class="ttt-subtitle">Crie, experimente e zoe com a galera</div>
 
@@ -741,26 +807,40 @@
       name: "Gabe",
       avatar: "https://avatars.steamstatic.com/c94633f1303787c7164b7833b0d964e87dc1217d_full.jpg"
     },
-{
+    {
       steamId: "",
       name: "luis29dan",
       avatar: "https://avatars.steamstatic.com/12ea6ecd7e0b241345564ba2e6e1fb61160669e2_full.jpg"
     },
-{
+    {
       steamId: "",
       name: "Sheva",
       avatar: "https://avatars.steamstatic.com/0650a97d7708b948a87e28c4b7c07ca9f268b073_full.jpg"
     },
-{
+    {
       steamId: "",
       name: "₊✩‧₊˚౨ ST4R ৎ˚₊",
       avatar: "https://avatars.steamstatic.com/d6819b610b1143095fd1f413c6dd0f2fd663a622_full.jpg"
+    },
+{
+      steamId: "",
+      name: " Tank evans",
+      avatar: "https://avatars.akamai.steamstatic.com/61852d1e3db180b1173dcf851c5b54aaafa82876_full.jpg"
+    },
+{
+      steamId: "",
+      name: "memez",
+      avatar: "https://avatars.akamai.steamstatic.com/c23c156a29482817ddc9fa5b1640cf4426d30631_full.jpg"
+    },
+{
+      steamId: "",
+      name: "Thunder370",
+      avatar: "https://avatars.akamai.steamstatic.com/e4c0a776a7b3ee3a933fcf5df84ccaaa5ca964fd_full.jpg"
     },
   ];
 
   /* =========================================================
      BACKGROUND FIXO (cover total)
-     - usando background-image direto (mais estável)
      ========================================================= */
   (function initBackground(){
     var layer = document.getElementById("bg-layer");
@@ -769,16 +849,34 @@
 
     var url = LOADING_CONFIG.backgroundImages[0];
 
-    // >>> SETA IMEDIATO (garante no CEF)
+    // seta imediato no layer (fundo)
     layer.style.backgroundImage = "url('" + url + "')";
 
-    // preload opcional só pra evitar flash quando trocar depois
+    // preload opcional
     var pre = new Image();
     pre.src = url;
   })();
 
+  (function initBackgroundImg(){
+    var imgEl = document.getElementById("bg-img");
+    if(!imgEl) return;
+
+    // URL absoluta (evita bug de relativo no CEF)
+    var ABS_BG = "https://hanicbr.github.io/backtttloading/assets/bg.png";
+
+    var pre = new Image();
+    pre.onload = function(){
+      imgEl.src = ABS_BG;
+    };
+    pre.onerror = function(){
+      // fallback opcional
+    };
+
+    pre.src = ABS_BG + (ABS_BG.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+  })();
+
   /* =========================================================
-     VIP RENDER
+     VIP RENDER + AJUSTE DE LARGURA DO CARD
      ========================================================= */
   function renderVips(){
     var list = document.getElementById("vip-list");
@@ -796,6 +894,30 @@
           '<div class="vip-id">'+(v.steamId||"")+'</div>' +
         '</div>';
       list.appendChild(card);
+    }
+
+    // ajusta tamanho/posição do card de VIP conforme quantidade
+    var box = document.querySelector(".card-vips");
+    if(box){
+      var count = VIPS.length;
+      var cols = Math.ceil(count / 4) || 1;  // 4 por coluna
+
+      if(cols <= 1){
+        // até 4 VIPs -> card do meio, mesma largura dos outros
+        box.style.gridColumn = "2 / span 1";
+        box.style.maxWidth  = "100%";
+        box.style.margin    = "0";
+      } else if(cols === 2){
+        // 5–8 VIPs -> visualmente 2 colunas, mas CENTRALIZADO
+        box.style.gridColumn = "1 / span 3";
+        box.style.maxWidth   = "66.666%";
+        box.style.margin     = "0 auto";
+      } else {
+        // 9+ VIPs -> ocupa a linha toda (3 colunas)
+        box.style.gridColumn = "1 / span 3";
+        box.style.maxWidth   = "100%";
+        box.style.margin     = "0";
+      }
     }
   }
   renderVips();
@@ -901,7 +1023,6 @@
 
   /* =========================================================
      AUTO SCALE (1920x1080 baseline)
-     - deixa reduzir em telas menores
      ========================================================= */
   (function autoScale(){
     function apply(){
@@ -910,7 +1031,7 @@
       var scaleW = w / 1920;
       var scaleH = h / 1080;
       var s = Math.min(scaleW, scaleH);
-      s = Math.max(0.85, Math.min(1.18, s));
+      s = Math.max(0.7, Math.min(1.18, s));
       document.documentElement.style.setProperty("--ui-scale", s.toFixed(3));
     }
     apply();
@@ -918,7 +1039,7 @@
   })();
 
   /* =========================================================
-     PREVIEW FORA DO GMOD (agora Sandbox)
+     PREVIEW FORA DO GMOD (Sandbox)
      ========================================================= */
   (function preview(){
     var ua = navigator.userAgent || "";
@@ -945,26 +1066,6 @@
       setTimeout(tick, 900);
     }
     setTimeout(tick, 800);
-  })();
-
-  (function initBackground(){
-    var imgEl = document.getElementById("bg-img");
-    if(!imgEl) return;
-
-    // coloca URL absoluta aqui (isso evita bug de relativo no CEF)
-    var ABS_BG = "https://hanicbr.github.io/backtttloading/assets/bg.png";
-
-    // preload + cache-bust
-    var pre = new Image();
-    pre.onload = function(){
-      imgEl.src = ABS_BG;
-    };
-    pre.onerror = function(){
-      // fallback simples: tenta uma segunda URL se quiser
-      // imgEl.src = "https://outro-host/bg.jpg";
-    };
-
-    pre.src = ABS_BG + (ABS_BG.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
   })();
   </script>
 </body>
